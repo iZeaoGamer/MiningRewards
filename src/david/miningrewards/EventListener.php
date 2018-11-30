@@ -46,6 +46,7 @@ class EventListener implements Listener, Messages {
             return;
         }
         $player->sendMessage(TextFormat::GREEN . "Opening reward...!");
+        $this->plugin->getServer()->broadcastMessage("§5$player §dfound §5$item §dby mining!");
         $player->getInventory()->setItemInHand($item->setCount($item->getCount() - 1));
         $this->plugin->getScheduler()->scheduleRepeatingTask(new TickTask($itemEntity, 20), 5);
         $this->plugin->getScheduler()->scheduleDelayedTask(new AnimationTask($player, $itemEntity), 100);
