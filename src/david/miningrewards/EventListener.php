@@ -9,6 +9,12 @@ use pocketmine\level\particle\HugeExplodeSeedParticle;
 use pocketmine\level\sound\BlazeShootSound;
 use pocketmine\utils\TextFormat;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\command\ConsoleCommandSender;
+use pocketmine\entity\object\ItemEntity;
+use pocketmine\item\Item;
+use pocketmine\level\particle\HugeExplodeSeedParticle;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\Player;
 
 class EventListener implements Listener {
 
@@ -32,10 +38,10 @@ $amount = mt_rand($this->plugin->getCountMin(), $this->plugin->getCountMax());
         $rewards = $this->plugin->getRewards();
         for($i = 0; $i < $amount; $i++) {
             $reward = $rewards[array_rand($rewards)];
-            if(!$reward instanceof Item) {
-                return;
-          //      $this->item->getLevel()->dropItem($this->item, $reward);
-           //     continue;
+            if($reward instanceof Item) {
+              //  return;
+                $this->item->getLevel()->dropItem($this->item, $reward);
+               continue;
             }
             $reward = explode(":", $reward);
             $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(),
