@@ -28,7 +28,7 @@ class Reward extends Item {
    //     $itemEntity = $player->getLevel()->dropItem($player->add(0, 3, 0), $this, $directionVector->multiply(0.5), 1000);
         $player->sendMessage(Loader::getPrefix() . TextFormat::GREEN . "Opening reward...!");
         $player->getInventory()->setItemInHand($this->pop());
-       Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new TickTask($player, $itemEntity, Loader::getInstance()->getAnimationTickRate()), 5);
+    //   Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new TickTask($player, $itemEntity, Loader::getInstance()->getAnimationTickRate()), 5);
         return true;
     }
 }
