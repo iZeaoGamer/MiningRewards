@@ -8,6 +8,7 @@ use pocketmine\event\Listener;
 use pocketmine\level\particle\HugeExplodeSeedParticle;
 use pocketmine\level\sound\BlazeShootSound;
 use pocketmine\utils\TextFormat;
+use pocketmine\event\player\PlayerInteractEvent;
 
 class EventListener implements Listener {
 
@@ -23,7 +24,31 @@ class EventListener implements Listener {
         $this->plugin = $plugin;
         $plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
     }
-
+    public function onInteract(PlayerInteractEvent $event){
+        $player = $event->getPlayer();
+        $this->player = $player;
+        $this->item = $player->getInventory()->getItemInHand();
+$amount = mt_rand($this->plugin->getCountMin(), $this->plugin->getCountMax());
+        $rewards = $this->plugin->getRewards();
+        for($i = 0; $i < $amount; $i++) {
+            $reward = $rewards[array_rand($rewards)];
+            if(!$reward instanceof Item) {
+                return;
+          //      $this->item->getLevel()->dropItem($this->item, $reward);
+           //     continue;
+            }
+            $reward = explode(":", $reward);
+            $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(),
+                str_replace("{player}", $this->player->getName(), $reward[0]));
+            if(isset($reward[1])) {
+                $this->player->sendMessage(str_replace("&", TextFormat::ESCAPE, $reward[1]));
+            }
+        }
+        $this->item->getLevel()->addParticle(new HugeExplodeSeedParticle($this->item));
+        $this->item->getLevel()->broadcastLevelSoundEvent($this->item, LevelSoundEventPacket::SOUND_EXPLODE);
+        $this->item->flagForDespawn();
+    }
+}
     /**
      * @param BlockBreakEvent $event
      */
